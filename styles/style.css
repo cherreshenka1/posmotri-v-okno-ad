@@ -1,51 +1,426 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* ===== Глобальные переменные ===== */
+:root {
+    --white: #ffffff;
+    --black: #000000;
+    --accent: #8B0000;
+    --gray: #f5f5f5;
+    --border-gray: #e0e0e0;
+    --active-bg: #f0f0f0;
+    --overlay-bg: rgba(0, 0, 0, 0.7);
 }
 
-html {
-  block-size: 100%;
-}
+/* ===== ЛЕЙАУТ ===== */
 
 .page {
-  inline-size: 1200px;
-  block-size: 100%;
-  margin: auto;
-  color: #fff;
-  font-family: 'Fira Sans Condensed', sans-serif;
-  font-size: 18px;
-  background-color: #1b1919;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100vh;
+    background-color: var(--white);
+    font-family: 'Inter', sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-p,
-ul,
-ol,
-li,
-blockquote,
-fieldset {
-  margin: 0;
-  padding: 0;
+/* Центрирование контента */
+.content {
+    max-inline-size: 1200px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    padding-block: 40px;
+    padding-inline: 24px;
+    flex-grow: 1;
 }
 
-ul,
-ol {
-  list-style: none;
+/* Левая колонка с поиском */
+.content__search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
-/* Кастомный скроллбар */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
+/* Правая колонка с видео и карточками */
+.content__result {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgb(217 217 217 / 10%);
+/* Заголовок */
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #D9D9D9;
+.content__accent {
+    color: var(--accent);
+}
+
+/* Контейнер для видео */
+.result__video-container {
+    position: relative;
+    inline-size: 100%;
+    block-size: 280px;
+    margin-block-end: 20px;
+    background-color: var(--black);
+    overflow: hidden;
+}
+
+.result__video {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+}
+
+/* Контейнер для списка карточек */
+.content__list-container {
+    block-size: 500px;
+    overflow-y: auto;
+    padding-inline-end: 8px;
+}
+
+.content__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.content__list-item {
+    padding-inline: 3px;
+}
+
+/* Ссылка-карточка */
+.content__card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.content__card-link_current {
+    background-color: var(--active-bg);
+}
+
+.content__card-link:hover {
+    text-decoration: underline;
+}
+
+.content__card-link:focus {
+    outline: none;
+}
+
+.content__card-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.content__card-link:active {
+    background-color: var(--active-bg);
+}
+
+/* Карточка видео */
+.content__video-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.content__video-card-thumbnail {
+    inline-size: 160px;
+    block-size: 90px;
+    flex-shrink: 0;
+    object-fit: cover;
+    object-position: center;
+}
+
+.content__video-card-description-container {
+    flex-grow: 1;
+}
+
+.content__video-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content__video-card-description {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ===== ФОРМА ПОИСКА ===== */
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.search-form__fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.search-form__fieldset-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Чекбоксы в строку */
+.search-form__checkbox-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Лейбл для инпутов и чекбоксов */
+.search-form__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.3;
+}
+
+.search-form__label:hover .search-form__label-text {
+    text-decoration: underline;
+}
+
+/* Скрываем стандартные элементы форм */
+.visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Стилизация текстового поля */
+.search-form__text-input {
+    border: none;
+    border-block-start: 1px solid var(--black);
+    border-block-end: 1px solid var(--black);
+    padding-block: 8px;
+    padding-inline: 0;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 400;
+    background-color: transparent;
+    color: var(--black);
+    appearance: none;
+    inline-size: 100%;
+}
+
+.search-form__text-input:focus {
+    outline: none;
+}
+
+.search-form__label:has(.search-form__text-input:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Кастомный чекбокс */
+.search-form__pseudo-checkbox {
+    display: inline-block;
+    inline-size: 16px;
+    block-size: 16px;
+    border: 1px solid var(--black);
+    background-color: transparent;
+    position: relative;
+}
+
+.search-form__checkbox:checked + .search-form__pseudo-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    inline-size: 8px;
+    block-size: 8px;
+    background-color: var(--black);
+}
+
+/* Фокус на чекбоксе */
+.search-form__label:has(.search-form__checkbox:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ===== КНОПКИ ===== */
+
+/* Базовый стиль кнопки */
+.button {
+    border: 1px solid var(--black);
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 12px 24px;
+}
+
+.button:hover {
+    text-decoration: underline;
+}
+
+.button:active {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.button:focus {
+    outline: none;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Кнопка "Найти" */
+.search-form__submit-button {
+    align-self: flex-end;
+    padding-inline: 32px;
+}
+
+/* Кнопка "Показать ещё" */
+.more-button {
+    inline-size: 100%;
+    text-align: center;
+    margin-block-start: 20px;
+}
+
+/* ===== ПРЕЛОАДЕР ===== */
+
+/* Контейнеры для прелоадеров */
+.result__video-container,
+.content__list-container {
+    position: relative;
+}
+
+/* Прелоадер (стили уже есть в стартовом коде, добавляем позиционирование) */
+.preloader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--overlay-bg);
+    z-index: 10;
+}
+
+/* Анимация прелоадера (оставляем как есть) */
+.preloader__spinner {
+    inline-size: 50px;
+    block-size: 50px;
+    border: 4px solid var(--white);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== ОШИБКА ===== */
+
+/* Блок ошибки */
+.error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--overlay-bg);
+    color: var(--white);
+    text-align: center;
+    z-index: 10;
+}
+
+.error__title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.error__message {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* ===== СКРОЛЛБАР (кастомный) ===== */
+
+/* Стили для скроллбара — уже есть в стартовом коде, 
+   но добавляем на всякий случай */
+
+.content__list-container::-webkit-scrollbar {
+    inline-size: 8px;
+}
+
+.content__list-container::-webkit-scrollbar-track {
+    background-color: var(--gray);
+    border-radius: 4px;
+}
+
+.content__list-container::-webkit-scrollbar-thumb {
+    background-color: var(--border-gray);
+    border-radius: 4px;
+}
+
+.content__list-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent);
+}
+
+/* ===== АДАПТИВ (дополнительно) ===== */
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .result__video-container {
+        block-size: 200px;
+    }
+
+    .content__video-card-thumbnail {
+        inline-size: 120px;
+        block-size: 68px;
+    }
 }
